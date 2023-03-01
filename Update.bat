@@ -5,6 +5,7 @@ rem -- Set up environment ------------------------------------------------------
 rem ============================================================================
 
 set SCRIPT_DIR=%~dp0
+set SCRIPT_DIR=%SCRIPT_DIR:\=/%
 set CONTENT_FOLDER=%SCRIPT_DIR%Unreal/CarlaUE4/Content/Carla
 set VERSION_FILE=%CONTENT_FOLDER%/.version
 set CONTENT_VERSIONS=%SCRIPT_DIR%/Util/ContentVersions.txt
@@ -35,20 +36,23 @@ rem -- Download the content ----------------------------------------------------
 rem ============================================================================
 
 echo Downloading "%CONTENT_LINK%"...
-powershell -Command "(New-Object System.Net.WebClient).DownloadFile('%CONTENT_LINK%', '%CONTENT_FILE%')"
+@REM powershell -Command "(New-Object System.Net.WebClient).DownloadFile('%CONTENT_LINK%', '%CONTENT_FILE%')"
 if %errorlevel% neq 0 goto error_download
 
 echo %FILE_N% Extracting content from "%CONTENT_FILE%", this can take a while...
-if exist "%ProgramW6432%/7-Zip/7z.exe" (
-    "%ProgramW6432%/7-Zip/7z.exe" x "%CONTENT_FILE%" -o"%CONTENT_FOLDER%" -y
+@REM if exist "%ProgramW6432%/7-Zip/7z.exe" (
+if exist "D:\\app\\7-Zip\\7z.exe" (
+    echo 1231312313131231
+    "D:/app/7-Zip/7z.exe" x "%CONTENT_FILE%" -o"%CONTENT_FOLDER%" -y
     if %errorlevel% neq 0 goto error_download
     echo Deleting %CONTENT_FILE:/=\%
-    del %CONTENT_FILE:/=\%
-    "%ProgramW6432%/7-Zip/7z.exe" x "%CONTENT_FILE_TAR%" -o"%CONTENT_FOLDER%" -y
+    @REM del %CONTENT_FILE:/=\%
+    "%D:/app/7-Zip/7z.exe" x "%CONTENT_FILE_TAR%" -o"%CONTENT_FOLDER%" -y
     if %errorlevel% neq 0 goto error_download
     echo Deleting %CONTENT_FILE_TAR:/=\%
-    del %CONTENT_FILE_TAR:/=\%
+    @REM del %CONTENT_FILE_TAR:/=\%
 ) else (
+    echo wrong!!!
     powershell -Command "Expand-Archive '%CONTENT_FILE%' -DestinationPath '%CONTENT_FOLDER%'"
     if %errorlevel% neq 0 goto error_download
     del %CONTENT_FILE%
